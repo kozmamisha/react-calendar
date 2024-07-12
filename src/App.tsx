@@ -58,7 +58,7 @@ function App() {
     <DateProvider>
       <div className="App">
         <Header />
-        {/* <Calendar /> */}
+        <Calendar />
       </div>
     </DateProvider>
   );

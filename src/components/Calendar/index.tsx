@@ -1,16 +1,41 @@
+import { useContext } from 'react';
+import { DateContext, monthArray } from '../../App';
 import './calendar.scss';
 
-export type CalendarProps = {
-  days: number;
-  currentDay: number;
-};
-
-const Calendar = ({ days, currentDay }: CalendarProps) => {
+const Calendar = () => {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const { days, currentDay, currentMonth, currentYear, month, year } = useContext(DateContext);
+
+  const firstDayOfMonth = new Date(`${month} 1, ${year}`).getDay();
+
+  const currentMonthIndex = monthArray.indexOf(month);
+  const prevMonthIndex = currentMonthIndex === 0 ? 11 : currentMonthIndex - 1;
+  const prevMonthYear = currentMonthIndex === 0 ? year - 1 : year;
+  const daysInPrevMonth = new Date(prevMonthYear, prevMonthIndex + 1, 0).getDate();
 
   const dates = [];
+
+  for (let i = firstDayOfMonth - 1; i >= 0; i--) {
+    dates.push({
+      day: daysInPrevMonth - i,
+      isPrevMonth: true,
+    });
+  }
+
   for (let i = 1; i <= days; i++) {
-    dates.push(i);
+    dates.push({
+      day: i,
+      isCurrentMonth: true,
+    });
+  }
+
+  const totalCells = 42;
+  const nextMonthDays = totalCells - dates.length;
+  for (let i = 1; i <= nextMonthDays; i++) {
+    dates.push({
+      day: i,
+      isNextMonth: true,
+    });
   }
 
   return (
@@ -23,13 +48,18 @@ const Calendar = ({ days, currentDay }: CalendarProps) => {
         ))}
       </div>
       <div className="calendar__body">
-        {dates.flat().map((date, index) => (
+        {dates.map((date, index) => (
           <div
             key={index}
-            // className={`day ${index < 3 || index > 32 ? 'prev-next-month' : ''}`}
-            className={`day ${date === currentDay ? 'current-day' : ''}`}
-          >
-            {date}
+            className={`day ${date.isPrevMonth || date.isNextMonth ? 'prev-next-month' : ''} ${
+              date.day === currentDay &&
+              date.isCurrentMonth &&
+              month === currentMonth &&
+              year === currentYear
+                ? 'current-day'
+                : ''
+            }`}>
+            {date.day}
           </div>
         ))}
       </div>
