@@ -1,24 +1,30 @@
-import { monthsName } from '../../App';
+import { useContext, useEffect } from 'react';
+import { DateContext } from '../../App';
 import './header.scss';
+import HeaderNavigation from '../HeaderNavigation';
 
-export interface HeaderProps {
-  month: monthsName;
-  year: number;
-  onClickBack: () => void;
-  onClickNext: () => void;
-  onClickToday: () => void;
-}
+const Header = () => {
+  const { month, year, setDays } = useContext(DateContext);
 
-const Header = (props: HeaderProps) => {
+  useEffect(() => {
+    handleCalculate();
+  }, [month, year]);
+
+  const handleCalculate = () => {
+    const numberOfDays = getDaysInMonth(month, year);
+    setDays(numberOfDays);
+  };
+
+  const getDaysInMonth = (monthName: string, year: number): number => {
+    const monthNumber = new Date(Date.parse(`${monthName} 1, ${year}`)).getMonth() + 1;
+    return new Date(year, monthNumber, 0).getDate();
+  };
+
   return (
     <div className="header">
-      <nav className="header__navigation">
-        <button onClick={props.onClickToday}>Today</button>
-        <button onClick={props.onClickBack}>Back</button>
-        <button onClick={props.onClickNext}>Next</button>
-      </nav>
+      <HeaderNavigation />
       <p>
-        {props.month} {props.year}
+        {month} {year}
       </p>
       <nav className="header__options">
         <button>Day</button>

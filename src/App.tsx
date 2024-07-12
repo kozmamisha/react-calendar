@@ -1,83 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import { createContext, useState, ReactNode } from 'react';
+import { MonthsName } from './types/MonthsNameEnum';
+
 import Header from './components/Header';
 import Calendar from './components/Calendar';
+import { DateContextType } from './types/DateContextType';
 
-export enum monthsName {
-  JAN = 'January',
-  FEB = 'February',
-  MAR = 'March',
-  APR = 'April',
-  MAY = 'May',
-  JUN = 'June',
-  JUL = 'July',
-  AUG = 'August',
-  SEP = 'September',
-  OCT = 'October',
-  NOV = 'November',
-  DEC = 'December',
-}
+type DateProviderProps = {
+  children: ReactNode;
+};
 
-const monthArray = Object.values(monthsName);
+export const monthArray = Object.values(MonthsName);
 
-function App() {
-  const currentDate = new Date();
-  const currentMonth = monthArray[currentDate.getMonth()] as monthsName;
-  const currentYear = currentDate.getFullYear();
+const currentDate = new Date();
+const currentMonth = monthArray[currentDate.getMonth()] as MonthsName;
+const currentYear = currentDate.getFullYear();
+const currentDay = currentDate.getDate();
 
-  const [month, setMonth] = useState<monthsName>(currentMonth);
+export const DateContext = createContext<DateContextType>({
+  currentDate,
+  currentMonth,
+  currentYear,
+  currentDay,
+  month: currentMonth,
+  setMonth: () => {},
+  year: currentYear,
+  setYear: () => {},
+  days: 0,
+  setDays: () => {},
+});
+
+export const DateProvider = ({ children }: DateProviderProps) => {
+  const [month, setMonth] = useState<MonthsName>(currentMonth);
   const [year, setYear] = useState<number>(currentYear);
   const [days, setDays] = useState<number>(0);
 
-  useEffect(() => {
-    handleCalculate();
-  }, [month, year]);
-
-  const handleCalculate = () => {
-    const numberOfDays = getDaysInMonth(month, year);
-    setDays(numberOfDays);
-  };
-
-  const getDaysInMonth = (monthName: string, year: number): number => {
-    const monthNumber = new Date(Date.parse(`${monthName} 1, ${year}`)).getMonth() + 1;
-    return new Date(year, monthNumber, 0).getDate();
-  };
-
-  const onClickBack = () => {
-    const currentMonthIndex = monthArray.indexOf(month);
-    if (currentMonthIndex > 0) {
-      setMonth(monthArray[currentMonthIndex - 1] as monthsName);
-    } else {
-      setMonth(monthArray[monthArray.length - 1] as monthsName);
-      setYear(year - 1);
-    }
-  };
-
-  const onClickNext = () => {
-    const currentMonthIndex = monthArray.indexOf(month);
-    if (currentMonthIndex < monthArray.length - 1) {
-      setMonth(monthArray[currentMonthIndex + 1] as monthsName);
-    } else {
-      setMonth(monthArray[0] as monthsName);
-      setYear(year + 1);
-    } 
-  };
-
-  const onClickToday = () => {
-    setMonth(currentMonth);
-    setYear(currentYear);
-  };
-
   return (
-    <div className="App">
-      <Header
-        onClickBack={() => onClickBack()}
-        onClickNext={() => onClickNext()}
-        onClickToday={() => onClickToday()}
-        month={month}
-        year={year}
-      />
-      <Calendar days={days} />
-    </div>
+    <DateContext.Provider
+      value={{
+        currentDate,
+        currentMonth,
+        currentYear,
+        currentDay,
+        month,
+        setMonth,
+        year,
+        setYear,
+        days,
+        setDays,
+      }}>
+      {children}
+    </DateContext.Provider>
+  );
+};
+
+function App() {
+  return (
+    <DateProvider>
+      <div className="App">
+        <Header />
+        {/* <Calendar /> */}
+      </div>
+    </DateProvider>
   );
 }
 

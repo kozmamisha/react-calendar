@@ -1,11 +1,11 @@
-// src/components/Calendar.js
 import './calendar.scss';
 
 export type CalendarProps = {
   days: number;
+  currentDay: number;
 };
 
-const Calendar = ({ days }: CalendarProps) => {
+const Calendar = ({ days, currentDay }: CalendarProps) => {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const dates = [];
@@ -24,7 +24,11 @@ const Calendar = ({ days }: CalendarProps) => {
       </div>
       <div className="calendar__body">
         {dates.flat().map((date, index) => (
-          <div key={index} className={`day ${index < 3 || index > 32 ? 'prev-next-month' : ''}`}>
+          <div
+            key={index}
+            // className={`day ${index < 3 || index > 32 ? 'prev-next-month' : ''}`}
+            className={`day ${date === currentDay ? 'current-day' : ''}`}
+          >
             {date}
           </div>
         ))}
