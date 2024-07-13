@@ -1,10 +1,13 @@
 import { useContext } from 'react';
+
 import { DateContext, monthArray } from '../../App';
+import CalendarDay from '../CalendarDay';
+
 import './calendar.scss';
 
 const Calendar = () => {
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const { days, currentDay, currentMonth, currentYear, month, year } = useContext(DateContext);
+  const { days, month, year } = useContext(DateContext);
 
   const firstDayOfMonth = new Date(`${month} 1, ${year}`).getDay();
 
@@ -49,18 +52,7 @@ const Calendar = () => {
       </div>
       <div className="calendar__body">
         {dates.map((date, index) => (
-          <div
-            key={index}
-            className={`day ${date.isPrevMonth || date.isNextMonth ? 'prev-next-month' : ''} ${
-              date.day === currentDay &&
-              date.isCurrentMonth &&
-              month === currentMonth &&
-              year === currentYear
-                ? 'current-day'
-                : ''
-            }`}>
-            {date.day}
-          </div>
+          <CalendarDay date={date} key={index} />
         ))}
       </div>
     </div>
