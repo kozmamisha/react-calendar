@@ -20,11 +20,16 @@ const CalendarDay = ({ date }: CalendarDayProps) => {
     month === currentMonth &&
     year === currentYear;
 
+  const handleDayClick = (day: number) => {
+    prompt(`${day} ${month} ${year}`);
+  };
+
   return (
     <div
       className={`day ${date.isPrevMonth || date.isNextMonth ? 'prev-next-month' : ''} ${
         isCurrentDay ? 'current-day' : ''
-      }`}>
+      }`}
+      onClick={() => handleDayClick(date.day)}>
       {date.day}
     </div>
   );
