@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { DateContext } from '../../App';
 import './calendarDay.scss';
 
@@ -13,6 +13,7 @@ type CalendarDayProps = {
 
 const CalendarDay = ({ date }: CalendarDayProps) => {
   const { currentDay, currentMonth, currentYear, month, year } = useContext(DateContext);
+  const [text, setText] = useState<string>('');
 
   const isCurrentDay =
     date.day === currentDay &&
@@ -21,7 +22,12 @@ const CalendarDay = ({ date }: CalendarDayProps) => {
     year === currentYear;
 
   const handleDayClick = (day: number) => {
-    prompt(`${day} ${month} ${year}`);
+    if (text) {
+      alert(text);
+    } else {
+      const userInput = prompt(`${day} ${month} ${year}. Create your task:`);
+      userInput && setText(userInput);
+    }
   };
 
   return (
@@ -31,6 +37,7 @@ const CalendarDay = ({ date }: CalendarDayProps) => {
       }`}
       onClick={() => handleDayClick(date.day)}>
       {date.day}
+      {text && <div className="task-text">{text}</div>}
     </div>
   );
 };
