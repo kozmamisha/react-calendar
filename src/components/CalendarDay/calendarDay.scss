@@ -1,5 +1,5 @@
 .day {
-  padding: 15px;
+  padding: 15px 2px;
   text-align: center;
   border: 1px solid #f5f5f5;
   min-height: 60px;
@@ -8,23 +8,28 @@
   width: 100px; /* Set a fixed width */
   height: 100px; /* Set a fixed height */
   box-sizing: border-box;
+
+  &:hover {
+    background-color: #efefef;
+  }
 }
 
 .current-day {
-  background-color: rgb(99, 99, 255);
+  background-color: rgb(222, 222, 255) !important;
   border: 1px solid #000;
-  color: white;
 }
 
 .prev-next-month {
-  background-color: #f5f5f5;
+  background-color: #f5f5f5 !important;
+  cursor: auto;
   color: #ccc;
 }
 
 .task-text {
   margin-top: 5px;
+  margin-bottom: 10px;
   padding: 5px;
-  background-color: #3276b1;
+  background-color: #55a7ee;
   color: white;
   border-radius: 5px;
   white-space: nowrap;
@@ -32,4 +37,9 @@
   text-overflow: ellipsis;
   width: 100%; /* Ensure the text block fits within the day block */
   box-sizing: border-box; /* Ensure padding is included in the width */
+
+  &:hover {
+    border: 2px solid #194a76;
+    padding: 3.5px;
+  }
 }

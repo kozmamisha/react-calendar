@@ -15,18 +15,32 @@ const CalendarDay = ({ date }: CalendarDayProps) => {
   const { currentDay, currentMonth, currentYear, month, year } = useContext(DateContext);
   const [text, setText] = useState<string>('');
 
-  const isCurrentDay =
-    date.day === currentDay &&
-    date.isCurrentMonth &&
-    month === currentMonth &&
-    year === currentYear;
+  const isCurrentMonth = date.isCurrentMonth && month === currentMonth && year === currentYear;
+  const isCurrentDay = date.day === currentDay && isCurrentMonth;
 
   const handleDayClick = (day: number) => {
+    if (date.isPrevMonth || date.isNextMonth) {
+      return;
+    }
     if (text) {
-      alert(text);
+      let userUpdatedInput = prompt('Write new task:');
+      userUpdatedInput && setText(userUpdatedInput);
     } else {
       const userInput = prompt(`${day} ${month} ${year}. Create your task:`);
       userInput && setText(userInput);
+    }
+  };
+
+  const showFullTask = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    alert(text);
+  };
+
+  const onDeleteTask = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    let answer = window.confirm('Are you sure you want delete task?');
+    if (answer) {
+      setText('');
     }
   };
 
@@ -37,7 +51,14 @@ const CalendarDay = ({ date }: CalendarDayProps) => {
       }`}
       onClick={() => handleDayClick(date.day)}>
       {date.day}
-      {text && <div className="task-text">{text}</div>}
+      {text && isCurrentMonth && (
+        <>
+          <div onClick={(e) => showFullTask(e)} className="task-text">
+            {text}
+          </div>
+          <button onClick={(e) => onDeleteTask(e)}>X</button>
+        </>
+      )}
     </div>
   );
 };
